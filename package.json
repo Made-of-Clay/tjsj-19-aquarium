@@ -12,7 +12,7 @@
     "@types/stats": "^0.16.30",
     "@types/three": "^0.176.0",
     "typescript": "^5.8.2",
-    "vite": "^6.3.5"
+    "vite": "^7.0.6"
   },
   "dependencies": {
     "lil-gui": "^0.20.0",
