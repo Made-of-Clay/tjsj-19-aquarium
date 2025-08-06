@@ -2,11 +2,14 @@ import GUI from 'lil-gui'
 import {
     AxesHelper,
     Clock,
+    CubeTextureLoader,
+    DoubleSide,
     GridHelper,
     LoadingManager,
     PCFSoftShadowMap,
     PerspectiveCamera,
     Scene,
+    ShaderMaterial,
     WebGLRenderer,
 } from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
@@ -14,7 +17,7 @@ import Stats from 'stats.js'
 import * as animations from './helpers/animations'
 import { resizeRendererToDisplaySize } from './helpers/responsiveness'
 import './style.css'
-import { getDemoObjects } from './getDemoObjects'
+import { getCube } from './getCube'
 import { getLights } from './getLights'
 
 const gui = new GUI({ title: '🐞 Debug GUI', width: 300 })
@@ -30,14 +33,26 @@ renderer.shadowMap.enabled = true
 renderer.shadowMap.type = PCFSoftShadowMap
 const scene = new Scene()
 
-    // ===== 👨🏻‍💼 LOADING MANAGER =====
+// ===== 👨🏻‍💼 LOADING MANAGER =====
 const loadingManager = new LoadingManager(console.log, console.log, console.error)
+
+const cubeTextureLoader = new CubeTextureLoader(loadingManager);
+const envMap = cubeTextureLoader.load([
+  'cubemap_images/px.png',
+  'cubemap_images/nx.png',
+  'cubemap_images/py.png',
+  'cubemap_images/ny.png',
+  'cubemap_images/pz.png',
+  'cubemap_images/nz.png',
+]);
+
+scene.background = envMap;
 
 const { ambientLight, pointLight, pointLightHelper } = getLights(gui)
 scene.add(ambientLight, pointLight, pointLightHelper)
 
-const { cube, plane } = getDemoObjects(gui, animation);
-scene.add(cube, plane)
+const { cube, plane } = getCube(gui, envMap, scene);
+scene.add(cube, plane);
 
 // ===== 🎥 CAMERA =====
 const camera = new PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000)
@@ -95,21 +110,17 @@ function animate() {
     requestAnimationFrame(animate)
 
     stats.begin()
-    if (animation.enabled && animation.play) {
-        animations.rotate(cube, clock, Math.PI / 3)
-        animations.bounce(cube, clock, 1, 0.5, 0.5)
-    }
 
     if (resizeRendererToDisplaySize(renderer)) {
-        const canvas = renderer.domElement
-        camera.aspect = canvas.clientWidth / canvas.clientHeight
-        camera.updateProjectionMatrix()
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
     }
 
-    cameraControls.update()
+    cameraControls.update();
 
-    renderer.render(scene, camera)
-    stats.end()
+    renderer.render(scene, camera);
+    stats.end();
 }
 
 animate()
