@@ -18,13 +18,16 @@ void main() {
     vec3 reflectionColor = textureCube(envMap, reflectedDirection).rgb;
 
     // Transparency/Fresnel (simplified)
-    float fresnel = pow(1.0 - dot(viewDirection, normal), 3.0);
-    vec3 finalColor = mix(vec3(0.1, 0.4, 0.6), reflectionColor, fresnel);
+    float fresnel = 1.0 - dot(viewDirection, normal);
+    vec3 baseColor = vec3(0.4, 0.4, 0.2);
+    vec3 finalColor = mix(baseColor, reflectionColor, fresnel);
+
+    // TODO experiment with other water effects like caustics, refraction, etc. (maybe less Fresnel)
 
     // Apply fog
     float depth = gl_FragCoord.z / gl_FragCoord.w;
     float fogFactor = smoothstep(fogNear, fogFar, depth);
     finalColor = mix(finalColor, fogColor, fogFactor);
 
-    gl_FragColor = vec4(finalColor, 0.7); // 0.7 is our opacity
+    gl_FragColor = vec4(finalColor, 0.5); // 2nd param is our opacity
 }

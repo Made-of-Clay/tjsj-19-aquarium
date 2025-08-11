@@ -31,7 +31,7 @@ const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true })
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = PCFSoftShadowMap
-const scene = new Scene()
+const scene = new Scene();
 
 // ===== 👨🏻‍💼 LOADING MANAGER =====
 const loadingManager = new LoadingManager(console.log, console.log, console.error)
@@ -51,8 +51,9 @@ scene.background = envMap;
 const { ambientLight, pointLight, pointLightHelper } = getLights(gui)
 scene.add(ambientLight, pointLight, pointLightHelper)
 
-const { cube, plane } = getCube(gui, envMap, scene);
-scene.add(cube, plane);
+const { cube, animateCube, sphere } = getCube(gui, envMap, scene);
+scene.add(sphere);
+scene.add(cube);
 
 // ===== 🎥 CAMERA =====
 const camera = new PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000)
@@ -74,8 +75,6 @@ const gridHelper = new GridHelper(20, 20, 'teal', 'darkgray')
 gridHelper.position.y = -0.01
 scene.add(gridHelper)
 
-// ===== 📈 STATS & CLOCK =====
-const clock = new Clock()
 const stats = new Stats()
 document.body.appendChild(stats.dom)
 
@@ -106,10 +105,15 @@ gui.add({ resetGui }, 'resetGui').name('RESET')
 
 gui.close()
 
-function animate() {
-    requestAnimationFrame(animate)
+const clock = new Clock();
 
-    stats.begin()
+function animate() {
+    requestAnimationFrame(animate);
+    
+    const elapsedTime = clock.getElapsedTime();
+    animateCube(elapsedTime);
+
+    stats.begin();
 
     if (resizeRendererToDisplaySize(renderer)) {
         const canvas = renderer.domElement;
