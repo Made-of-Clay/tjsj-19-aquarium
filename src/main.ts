@@ -3,26 +3,21 @@ import {
     AxesHelper,
     Clock,
     CubeTextureLoader,
-    DoubleSide,
     GridHelper,
     LoadingManager,
     PCFSoftShadowMap,
     PerspectiveCamera,
     Scene,
-    ShaderMaterial,
     WebGLRenderer,
 } from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import Stats from 'stats.js'
-import * as animations from './helpers/animations'
 import { resizeRendererToDisplaySize } from './helpers/responsiveness'
 import './style.css'
-import { getCube } from './getCube'
+import { getBubble } from './getBubble'
 import { getLights } from './getLights'
 
 const gui = new GUI({ title: '🐞 Debug GUI', width: 300 })
-
-const animation = { enabled: true, play: true }
 
 // ===== 🖼️ CANVAS, RENDERER, & SCENE =====
 const canvas = document.createElement('canvas')
@@ -51,40 +46,39 @@ scene.background = envMap;
 const { ambientLight, pointLight, pointLightHelper } = getLights(gui)
 scene.add(ambientLight, pointLight, pointLightHelper)
 
-const { cube, animateCube, sphere } = getCube(gui, envMap, scene);
-scene.add(sphere);
-scene.add(cube);
+const { animateBubble, bubble } = getBubble(gui, envMap, scene, loadingManager);
+scene.add(bubble);
 
 // ===== 🎥 CAMERA =====
 const camera = new PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000)
-camera.position.set(2, 2, 5)
+camera.position.set(-10, 5, 10)
 
 // ===== 🕹️ CONTROLS =====
-const cameraControls = new OrbitControls(camera, canvas)
-cameraControls.target = cube.position.clone()
-cameraControls.enableDamping = true
-cameraControls.autoRotate = false
-cameraControls.update()
+const cameraControls = new OrbitControls(camera, canvas);
+cameraControls.enableDamping = true;
+cameraControls.autoRotate = false;
+cameraControls.update();
 
 // ===== 🪄 HELPERS =====
-const axesHelper = new AxesHelper(4)
-axesHelper.visible = false
-scene.add(axesHelper)
+const axesHelper = new AxesHelper(4);
+axesHelper.visible = false;
+scene.add(axesHelper);
 
-const gridHelper = new GridHelper(20, 20, 'teal', 'darkgray')
-gridHelper.position.y = -0.01
-scene.add(gridHelper)
+const gridHelper = new GridHelper(20, 20, 'teal', 'darkgray');
+gridHelper.position.y = -0.01;
+gridHelper.visible = false;
+scene.add(gridHelper);
 
-const stats = new Stats()
-document.body.appendChild(stats.dom)
+const stats = new Stats();
+document.body.appendChild(stats.dom);
 
 // ==== 🐞 DEBUG GUI ====
-const helpersFolder = gui.addFolder('Helpers')
-helpersFolder.add(axesHelper, 'visible').name('axes')
-helpersFolder.add(pointLightHelper, 'visible').name('pointLight')
+const helpersFolder = gui.addFolder('Helpers');
+helpersFolder.add(axesHelper, 'visible').name('axes');
+helpersFolder.add(gridHelper, 'visible').name('grid');
 
-const cameraFolder = gui.addFolder('Camera')
-cameraFolder.add(cameraControls, 'autoRotate')
+const cameraFolder = gui.addFolder('Camera');
+cameraFolder.add(cameraControls, 'autoRotate');
 
 // persist GUI state in local storage on changes
 gui.onFinishChange(() => {
@@ -111,7 +105,7 @@ function animate() {
     requestAnimationFrame(animate);
     
     const elapsedTime = clock.getElapsedTime();
-    animateCube(elapsedTime);
+    animateBubble(elapsedTime);
 
     stats.begin();
 

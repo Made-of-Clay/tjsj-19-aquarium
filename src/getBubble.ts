@@ -1,10 +1,10 @@
 import GUI from 'lil-gui';
-import { BoxGeometry, Color, CubeTexture, DoubleSide, Mesh, MeshLambertMaterial, MeshStandardMaterial, PlaneGeometry, Scene, ShaderMaterial, SphereGeometry } from 'three'
+import { BoxGeometry, Color, CubeTexture, DoubleSide, LoadingManager, Mesh, MeshStandardMaterial, Scene, ShaderMaterial, SphereGeometry } from 'three'
 import waterVertexShader from './waterCube.vert?raw'
 import waterFragmentShader from './waterCube.frag?raw';
-import { BufferGeometryUtils } from 'three/examples/jsm/Addons.js';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
-export function getCube(gui: GUI, envMap: CubeTexture, scene: Scene) {
+export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingManager: LoadingManager) {
     // CUBE
     const sideLength = 2;
     const widthSegments = 100;
@@ -49,16 +49,34 @@ export function getCube(gui: GUI, envMap: CubeTexture, scene: Scene) {
     )
     cube.position.y = 0.5
 
-    const sphere = new Mesh(
+    const bubble = new Mesh(
         sphereGeo,
         waterCubeMaterial,
     );
+    const bubbleTweaks = {
+        scale: 2,
+    }
+    bubble.scale.set(bubbleTweaks.scale, bubbleTweaks.scale, bubbleTweaks.scale);
+    sphereFolder.add(bubbleTweaks, 'scale').min(1).max(5).step(1).onChange((value: number) => {
+        bubble.scale.set(value, value, value);
+    });
+
+    const loader = new GLTFLoader(loadingManager);
+    loader.load(
+        'models/koi/scene.gltf',
+        gltf => {
+            console.log('gltf', gltf);
+            scene.add(gltf.scene);
+        },
+        console.log,
+        console.error,
+    );
 
     // IDEA: use collision detection to increase the wave amplitude during collisions indicating disturbances
-    function animateCube(elapsedTime: number) {
+    function animateBubble(elapsedTime: number) {
         // move swimming creature in here
         waterCubeMaterial.uniforms.time.value = elapsedTime;
     }
     
-    return { cube, animateCube, sphere }
+    return { cube, animateBubble, bubble }
 }
