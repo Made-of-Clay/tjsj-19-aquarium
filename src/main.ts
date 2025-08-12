@@ -105,7 +105,7 @@ function animate() {
     requestAnimationFrame(animate);
     
     const elapsedTime = clock.getElapsedTime();
-    animateBubble(elapsedTime);
+    animateBubble(elapsedTime, camera);
 
     stats.begin();
 

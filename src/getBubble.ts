@@ -1,17 +1,14 @@
 import GUI from 'lil-gui';
-import { BoxGeometry, Color, CubeTexture, DoubleSide, LoadingManager, Mesh, MeshStandardMaterial, Scene, ShaderMaterial, SphereGeometry } from 'three'
+import { BoxGeometry, Color, CubeTexture, DoubleSide, LoadingManager, Mesh, MeshStandardMaterial, PerspectiveCamera, Quaternion, Scene, ShaderMaterial, SphereGeometry } from 'three'
 import waterVertexShader from './waterCube.vert?raw'
 import waterFragmentShader from './waterCube.frag?raw';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingManager: LoadingManager) {
-    // CUBE
     const sideLength = 2;
     const widthSegments = 100;
 
     const sphereGeo = new SphereGeometry(sideLength, widthSegments, widthSegments);
-    
-    const cubeGeo = new BoxGeometry(sideLength / 2, sideLength / 2, sideLength / 2, widthSegments, widthSegments, widthSegments);
 
     const waterCubeMaterial = new ShaderMaterial({
         uniforms: {
@@ -22,6 +19,7 @@ export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingMa
             fogColor: { value: scene.fog?.color ?? new Color(0x000000) },
             fogNear: { value: (scene.fog && 'near' in scene.fog) ? scene.fog?.near : 1 },
             fogFar: { value: (scene.fog && 'far' in scene.fog) ? scene.fog?.far : 1000 },
+            cameraQuaternion: { value: new Quaternion() },
         },
         vertexShader: waterVertexShader,
         fragmentShader: waterFragmentShader,
@@ -42,13 +40,6 @@ export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingMa
         roughness: 0.7,
     });
 
-    const cube = new Mesh(
-        cubeGeo,
-        testingMaterial,
-        // waterCubeMaterial,
-    )
-    cube.position.y = 0.5
-
     const bubble = new Mesh(
         sphereGeo,
         waterCubeMaterial,
@@ -68,15 +59,16 @@ export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingMa
             console.log('gltf', gltf);
             scene.add(gltf.scene);
         },
-        console.log,
+        undefined,
         console.error,
     );
 
     // IDEA: use collision detection to increase the wave amplitude during collisions indicating disturbances
-    function animateBubble(elapsedTime: number) {
+    function animateBubble(elapsedTime: number, camera: PerspectiveCamera) {
         // move swimming creature in here
         waterCubeMaterial.uniforms.time.value = elapsedTime;
+        waterCubeMaterial.uniforms.cameraQuaternion.value.copy(camera.quaternion)
     }
     
-    return { cube, animateBubble, bubble }
+    return { animateBubble, bubble }
 }
