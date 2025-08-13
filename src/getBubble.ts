@@ -1,5 +1,5 @@
 import GUI from 'lil-gui';
-import { AnimationMixer, BoxGeometry, Color, CubeTexture, DoubleSide, LoadingManager, Mesh, MeshStandardMaterial, PerspectiveCamera, Quaternion, Scene, ShaderMaterial, SphereGeometry } from 'three'
+import { AnimationMixer, Color, CubeTexture, DoubleSide, LoadingManager, Mesh, PerspectiveCamera, Quaternion, Scene, ShaderMaterial, SphereGeometry } from 'three'
 import waterVertexShader from './waterCube.vert?raw'
 import waterFragmentShader from './waterCube.frag?raw';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
@@ -33,12 +33,6 @@ export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingMa
     // wave height gets *crazy* if over 1
     sphereFolder.add(waterCubeMaterial.uniforms.waveHeight, 'value').min(0).max(0.05).step(0.001).name('Wave Height');
     sphereFolder.add(waterCubeMaterial, 'transparent').name('Transparent');
-
-    const testingMaterial = new MeshStandardMaterial({
-        color: '#f69f1f',
-        metalness: 0.5,
-        roughness: 0.7,
-    });
 
     const bubble = new Mesh(
         sphereGeo,
