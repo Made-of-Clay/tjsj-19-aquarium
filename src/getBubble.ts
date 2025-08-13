@@ -1,5 +1,5 @@
 import GUI from 'lil-gui';
-import { BoxGeometry, Color, CubeTexture, DoubleSide, LoadingManager, Mesh, MeshStandardMaterial, PerspectiveCamera, Quaternion, Scene, ShaderMaterial, SphereGeometry } from 'three'
+import { AnimationMixer, BoxGeometry, Color, CubeTexture, DoubleSide, LoadingManager, Mesh, MeshStandardMaterial, PerspectiveCamera, Quaternion, Scene, ShaderMaterial, SphereGeometry } from 'three'
 import waterVertexShader from './waterCube.vert?raw'
 import waterFragmentShader from './waterCube.frag?raw';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
@@ -45,12 +45,14 @@ export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingMa
         waterCubeMaterial,
     );
     const bubbleTweaks = {
-        scale: 2,
+        scale: 3,
     }
     bubble.scale.set(bubbleTweaks.scale, bubbleTweaks.scale, bubbleTweaks.scale);
     sphereFolder.add(bubbleTweaks, 'scale').min(1).max(5).step(1).onChange((value: number) => {
         bubble.scale.set(value, value, value);
     });
+
+    let mixer: AnimationMixer | null = null;
 
     const loader = new GLTFLoader(loadingManager);
     loader.load(
@@ -58,16 +60,24 @@ export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingMa
         gltf => {
             console.log('gltf', gltf);
             scene.add(gltf.scene);
+
+            if (gltf.animations?.length) {
+                gltf.scene.rotateY(90); // turn fish the way I want initially
+                mixer = new AnimationMixer(gltf.scene);
+                console.assert(gltf.animations.length > 0, 'The model has no animations');
+                mixer?.clipAction(gltf.animations[0]).play();
+            }
         },
         undefined,
         console.error,
     );
 
     // IDEA: use collision detection to increase the wave amplitude during collisions indicating disturbances
-    function animateBubble(elapsedTime: number, camera: PerspectiveCamera) {
-        // move swimming creature in here
+    function animateBubble(elapsedTime: number, camera: PerspectiveCamera, deltaTime: number) {
         waterCubeMaterial.uniforms.time.value = elapsedTime;
         waterCubeMaterial.uniforms.cameraQuaternion.value.copy(camera.quaternion)
+        const safeDelta = Math.min(Math.max(deltaTime, 1/120), 1/24); // between 1/120s and 1/24s
+        mixer?.update(safeDelta * 8);
     }
     
     return { animateBubble, bubble }
