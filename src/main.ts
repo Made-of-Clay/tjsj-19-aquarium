@@ -9,15 +9,17 @@ import {
     PerspectiveCamera,
     Scene,
     WebGLRenderer,
-} from 'three'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import Stats from 'stats.js'
-import { resizeRendererToDisplaySize } from './helpers/responsiveness'
-import './style.css'
-import { getBubble } from './getBubble'
-import { getLights } from './getLights'
+} from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import Stats from 'stats.js';
+import { resizeRendererToDisplaySize } from './helpers/responsiveness';
+import './style.css';
+import { getBubble } from './getBubble';
+import { getLights } from './getLights';
 
-const gui = new GUI({ title: '🐞 Debug GUI', width: 300 })
+console.log('🐠 tjsj-19-aquarium');
+
+const gui = new GUI({ title: '🐞 Debug GUI', width: 300 });
 
 // ===== 🖼️ CANVAS, RENDERER, & SCENE =====
 const canvas = document.createElement('canvas')
