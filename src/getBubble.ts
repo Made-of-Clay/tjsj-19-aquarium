@@ -1,10 +1,13 @@
 import GUI from 'lil-gui';
-import { AnimationMixer, Color, CubeTexture, DoubleSide, LoadingManager, Mesh, PerspectiveCamera, Quaternion, Scene, ShaderMaterial, SphereGeometry } from 'three'
+import { AnimationMixer, Color, CubeTexture, DoubleSide, Group, LoadingManager, Mesh, PerspectiveCamera, Quaternion, Scene, ShaderMaterial, SphereGeometry } from 'three'
 import waterVertexShader from './waterCube.vert?raw'
 import waterFragmentShader from './waterCube.frag?raw';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingManager: LoadingManager) {
+    const bubbleGroup = new Group();
+    bubbleGroup.name = 'Bubble Group';
+
     const sideLength = 2;
     const widthSegments = 100;
 
@@ -46,14 +49,15 @@ export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingMa
         bubble.scale.set(value, value, value);
     });
 
+    bubbleGroup.add(bubble);
+
     let mixer: AnimationMixer | null = null;
 
     const loader = new GLTFLoader(loadingManager);
     loader.load(
         'models/koi/scene.gltf',
         gltf => {
-            console.log('gltf', gltf);
-            scene.add(gltf.scene);
+            bubbleGroup.add(gltf.scene);
 
             if (gltf.animations?.length) {
                 gltf.scene.rotateY(90); // turn fish the way I want initially
@@ -74,5 +78,5 @@ export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingMa
         mixer?.update(safeDelta * 8);
     }
     
-    return { animateBubble, bubble }
+    return { animateBubble, bubbleGroup }
 }

@@ -16,6 +16,7 @@ import { resizeRendererToDisplaySize } from './helpers/responsiveness';
 import './style.css';
 import { getBubble } from './getBubble';
 import { getLights } from './getLights';
+import { getBridge } from './getBridge';
 
 console.log('🐠 tjsj-19-aquarium');
 
@@ -45,11 +46,19 @@ const envMap = cubeTextureLoader.load([
 
 scene.background = envMap;
 
-const { ambientLight, pointLight, pointLightHelper } = getLights(gui)
-scene.add(ambientLight, pointLight, pointLightHelper)
+// ===== 🎥 CAMERA =====
+const { ambientLight, pointLight, pointLightHelper } = getLights(gui);
+scene.add(ambientLight, pointLight, pointLightHelper);
 
-const { animateBubble, bubble } = getBubble(gui, envMap, scene, loadingManager);
-scene.add(bubble);
+// ===== 🫧 OBJECTS =====
+const { animateBubble, bubbleGroup } = getBubble(gui, envMap, scene, loadingManager);
+bubbleGroup.position.set(10, 10, 0);
+scene.add(bubbleGroup);
+
+const bridge = getBridge(gui);
+bridge.rotateX(-Math.PI / 2);
+scene.add(bridge);
+
 
 // ===== 🎥 CAMERA =====
 const camera = new PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000)

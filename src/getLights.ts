@@ -3,8 +3,8 @@ import { AmbientLight, PointLight, PointLightHelper } from 'three';
 
 export function getLights(gui: GUI) {
     const ambientLight = new AmbientLight('white', 0.4);
-    const pointLight = new PointLight('white', 40, 100);
-    pointLight.position.set(-5, 5, 5);
+    const pointLight = new PointLight('white', 40, 200);
+    pointLight.position.set(5, 12, 5);
     pointLight.castShadow = true;
     pointLight.shadow.radius = 4;
     pointLight.shadow.camera.near = 0.1;
@@ -14,11 +14,16 @@ export function getLights(gui: GUI) {
 
     const pointLightHelper = new PointLightHelper(pointLight, undefined, 'orange');
     pointLightHelper.visible = false;
+    
 
     const lightsFolder = gui.addFolder('Lights');
     lightsFolder.add(ambientLight, 'visible').name('Ambient Light');
     lightsFolder.add(pointLight, 'visible').name('Point Light');
-    lightsFolder.add(pointLight, 'intensity').min(3).max(100).step(1).name('Point Light Intensity');
+    lightsFolder.add(pointLight, 'intensity').min(3).max(500).step(1).name('Point Light Intensity');
+    lightsFolder.add(pointLight.position, 'x').name('Point Light  X').min(-50).max(50).step(1);
+    lightsFolder.add(pointLight.position, 'y').name('Point Light  Y').min(-50).max(50).step(1);
+    lightsFolder.add(pointLight.position, 'z').name('Point Light  Z').min(-50).max(50).step(1);
+    lightsFolder.add(pointLightHelper, 'visible').name('Point Light Helper');
 
     return { ambientLight, pointLight, pointLightHelper };
 }
