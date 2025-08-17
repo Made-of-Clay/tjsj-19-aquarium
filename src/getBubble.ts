@@ -60,7 +60,7 @@ export function getBubble(gui: GUI, envMap: CubeTexture, scene: Scene, loadingMa
             bubbleGroup.add(gltf.scene);
 
             if (gltf.animations?.length) {
-                gltf.scene.rotateY(90); // turn fish the way I want initially
+                gltf.scene.rotateY(0); // turn fish the way I want initially
                 mixer = new AnimationMixer(gltf.scene);
                 console.assert(gltf.animations.length > 0, 'The model has no animations');
                 mixer?.clipAction(gltf.animations[0]).play();

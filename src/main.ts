@@ -8,6 +8,7 @@ import {
     PCFSoftShadowMap,
     PerspectiveCamera,
     Scene,
+    TextureLoader,
     WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -32,7 +33,8 @@ renderer.shadowMap.type = PCFSoftShadowMap
 const scene = new Scene();
 
 // ===== 👨🏻‍💼 LOADING MANAGER =====
-const loadingManager = new LoadingManager(console.log, console.log, console.error)
+const loadingManager = new LoadingManager(console.log, undefined, console.error)
+const textureLoader = new TextureLoader(loadingManager);
 
 const cubeTextureLoader = new CubeTextureLoader(loadingManager);
 const envMap = cubeTextureLoader.load([
@@ -55,14 +57,15 @@ const { animateBubble, bubbleGroup } = getBubble(gui, envMap, scene, loadingMana
 bubbleGroup.position.set(10, 10, 0);
 scene.add(bubbleGroup);
 
-const bridge = getBridge(gui);
+const bridge = getBridge(gui, textureLoader);
 bridge.rotateX(-Math.PI / 2);
+bridge.rotateZ(-Math.PI / 2);
+bridge.position.x = -72;
 scene.add(bridge);
-
 
 // ===== 🎥 CAMERA =====
 const camera = new PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000)
-camera.position.set(-10, 5, 10)
+camera.position.set(30, 5, 0)
 
 // ===== 🕹️ CONTROLS =====
 const cameraControls = new OrbitControls(camera, canvas);
