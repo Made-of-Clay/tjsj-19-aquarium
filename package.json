@@ -12,7 +12,7 @@
   "devDependencies": {
     "@types/stats": "^0.16.30",
     "@types/three": "^0.176.0",
-    "firebase-tools": "^14.12.0",
+    "firebase-tools": "^14.12.1",
     "typescript": "^5.8.2",
     "vite": "^6.3.5",
     "vite-bundle-visualizer": "^1.2.1"
