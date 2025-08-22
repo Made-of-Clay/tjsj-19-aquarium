@@ -53,9 +53,13 @@ const { ambientLight, pointLight, pointLightHelper } = getLights(gui);
 scene.add(ambientLight, pointLight, pointLightHelper);
 
 // ===== 🫧 OBJECTS =====
-const { animateBubble, bubbleGroup } = getBubble(gui, envMap, scene, loadingManager);
+const { animateBubble, bubbleGroup, /* animatedBubbleGroup */ } = getBubble(gui, envMap, scene, loadingManager);
+// TODO use new class when created for multiple bubbles/creatures
+// maybe pass fish into constructor
+// OR create Bubble class that Koi class decorates and customizes for animation? dunno - animation paths will differ
 bubbleGroup.position.set(10, 10, 0);
 scene.add(bubbleGroup);
+// scene.add(animatedBubbleGroup.object3D);
 
 const bridge = getBridge(gui, textureLoader);
 bridge.rotateX(-Math.PI / 2);
