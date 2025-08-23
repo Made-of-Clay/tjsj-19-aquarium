@@ -53,19 +53,18 @@ const { ambientLight, pointLight, pointLightHelper } = getLights(gui);
 scene.add(ambientLight, pointLight, pointLightHelper);
 
 // ===== 🫧 OBJECTS =====
-const { animateBubble, bubbleGroup, /* animatedBubbleGroup */ } = getBubble(gui, envMap, scene, loadingManager);
+const { animateBubble, bubbleGroup } = getBubble(gui, envMap, scene, loadingManager);
 // TODO use new class when created for multiple bubbles/creatures
 // maybe pass fish into constructor
 // OR create Bubble class that Koi class decorates and customizes for animation? dunno - animation paths will differ
-bubbleGroup.position.set(10, 10, 0);
+bubbleGroup.rotation.y = Math.PI * -0.5;
 scene.add(bubbleGroup);
-// scene.add(animatedBubbleGroup.object3D);
 
-const bridge = getBridge(gui, textureLoader);
-bridge.rotateX(-Math.PI / 2);
-bridge.rotateZ(-Math.PI / 2);
-bridge.position.x = -72;
-scene.add(bridge);
+// const bridge = getBridge(gui, textureLoader);
+// bridge.rotateX(-Math.PI / 2);
+// bridge.rotateZ(-Math.PI / 2);
+// bridge.position.x = -72;
+// scene.add(bridge);
 
 // ===== 🎥 CAMERA =====
 const camera = new PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000)
@@ -119,11 +118,40 @@ gui.close()
 
 const clock = new Clock();
 
+// 360 in N seconds
+// 0 -> 0
+// 90 -> 2.5s
+// 180 -> 5s
+// 270 -> 7.5s
+// 360 -> 10s
+// 1s = 360 / 10 = 36 degrees per second
+
+// write function to convert intElapsed into 0-360 and receive time duration in seconds as param
+function convertElapsedToDegrees(elapsed: number, duration: number): number {
+    const degreesPerSecond = 360 / duration;
+    return (elapsed * degreesPerSecond);
+}
+function degreesToRadians(degrees: number) {
+    // elapsedTime 10.03470000000298 degrees in 10s 361.2492000001073 2.547469882908029
+    return (degrees * Math.PI) / 180;
+}
+
 function animate() {
     requestAnimationFrame(animate);
-    
+
     const elapsedTime = clock.getElapsedTime();
     animateBubble(elapsedTime, camera, clock.getDelta());
+
+    const speedNumerator = 6.3; // don't change this
+    const rotationDuration = 20; // change this
+    const speed = speedNumerator / rotationDuration; // speed 1 duration 6.3
+    // const speed = 0.25; // multiple of 6 (2x = 3s; 0.5x = 12s; 1x = 6s)
+    bubbleGroup.position.y = Math.cos(elapsedTime * speed) * 10;
+    bubbleGroup.position.z = Math.sin(elapsedTime * speed) * 25;
+    
+    bubbleGroup.rotation.x = degreesToRadians(convertElapsedToDegrees(elapsedTime, rotationDuration));
+    // bubbleGroup.rotation.x = Math.PI * -0.5 * -(elapsedTime * 0.1);
+    // bubbleGroup.rotation.x = Math.PI * -0.5;
 
     stats.begin();
 
