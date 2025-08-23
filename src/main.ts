@@ -60,11 +60,11 @@ const { animateBubble, bubbleGroup } = getBubble(gui, envMap, scene, loadingMana
 bubbleGroup.rotation.y = Math.PI * -0.5;
 scene.add(bubbleGroup);
 
-// const bridge = getBridge(gui, textureLoader);
-// bridge.rotateX(-Math.PI / 2);
-// bridge.rotateZ(-Math.PI / 2);
-// bridge.position.x = -72;
-// scene.add(bridge);
+const bridge = getBridge(gui, textureLoader);
+bridge.rotateX(-Math.PI / 2);
+bridge.rotateZ(-Math.PI / 2);
+bridge.position.x = -72;
+scene.add(bridge);
 
 // ===== 🎥 CAMERA =====
 const camera = new PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000)
