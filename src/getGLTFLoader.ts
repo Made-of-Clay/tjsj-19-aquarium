@@ -1,5 +1,3 @@
-// import { GLTFLoader } from 'three';
-
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { getLoadingManager } from './getLoadingManager';
 
