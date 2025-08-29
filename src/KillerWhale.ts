@@ -1,6 +1,5 @@
 import { AnimationMixer, Group, Object3DEventMap } from 'three';
 import { getGLTFLoader } from './getGLTFLoader';
-import { getBubble } from './getBubble';
 import { GLTF } from 'three/examples/jsm/Addons.js';
 
 const loader = getGLTFLoader();

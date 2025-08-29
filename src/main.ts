@@ -18,7 +18,8 @@ import { getEnvMap } from './getEnvMap';
 import { getScene } from './getScene';
 import { Koi } from './Koi';
 import { SchoolingFish } from './SchoolingFish';
-import { KillerWhale } from './KillerWhale';
+import { convertElapsedToDegrees } from './convertElapsedToDegrees';
+import { degreesToRadians } from './degreesToRadians';
 
 console.log('🐠 tjsj-19-aquarium');
 
@@ -45,6 +46,10 @@ revolvingKoi.group.rotateY(0)
 const initCameraYRotation = Math.PI * -0.5;
 revolvingKoi.group.rotation.y = initCameraYRotation;
 scene.add(revolvingKoi.group);
+
+// const roamingKoi = new Koi();
+// roamingKoi.group.position.y = -15;
+// scene.add(roamingKoi.group);
 
 // FIXME whale is massive - won't respond to scaling here; might need Blender to edit
 // const killerWhale = new KillerWhale();
@@ -125,18 +130,46 @@ gui.close()
 
 const clock = new Clock();
 
+// let prevRoamingPos = 0;
+// let isRoamingNegative = false;
+
 function animate() {
     requestAnimationFrame(animate);
 
     const delta = clock.getDelta();
 
     const elapsedTime = clock.getElapsedTime();
-    animateBubble(elapsedTime, camera, delta);
+    animateBubble(elapsedTime, camera);
 
-    revolvingKoi.animate(delta, elapsedTime);
+    revolvingKoi.animate(delta); // common fish animation
+    const speedNumerator = 6.3; // don't change this (seems to complete a revolution in good speed)
+    const rotationDuration = 30; // change this (higher = takes longer to complete / "slower")
+    const speed = speedNumerator / rotationDuration;
+    revolvingKoi.group.position.y = Math.cos(elapsedTime * speed) * 25;
+    revolvingKoi.group.position.z = Math.sin(elapsedTime * speed) * 25;
+    revolvingKoi.group.rotation.x = degreesToRadians(convertElapsedToDegrees(elapsedTime, rotationDuration));
+    revolvingKoi.group.children[0]?.rotateX(degreesToRadians(Math.sin(elapsedTime) * 10) * 0.25);
+
+    // roamingKoi.animate(delta);
+    // roamingKoi.group.position.x = Math.sin(elapsedTime * 0.1) * 120;
+
+    // isRoamingNegative = prevRoamingPos - roamingKoi.group.position.x < 0;
+    // prevRoamingPos = roamingKoi.group.position.x;
+    // if (isRoamingNegative) {
+    //     console.log('flip directions - going negative');
+    //     // isRoamingNegative = true;
+    //     roamingKoi.group.rotateY(degreesToRadians(180));
+    // } else {
+    //     console.log('flip directions - going positive');
+    //     // isRoamingNegative = false;
+    //     roamingKoi.group.rotateY(degreesToRadians(360));
+    // }
+
+    // roamingKoi.group.rotateY(Math.PI * (/* isRoamingNegative ? 2 : */ 1))
+
     // killerWhale.animate(delta, elapsedTime);
     school.animate(delta, elapsedTime);
-    
+
     stats.begin();
 
     if (resizeRendererToDisplaySize(renderer)) {

@@ -17,7 +17,7 @@ let waterMaterial: ShaderMaterial;
  * @param {PerspectiveCamera} camera Active perspective camera
  * @param {Number} deltaTime From clock.getDelta(); time since last checked 
  */
-export function animateBubble(elapsedTime: number, camera: PerspectiveCamera, deltaTime: number) {
+export function animateBubble(elapsedTime: number, camera: PerspectiveCamera) {
     if (waterMaterial) {
         waterMaterial.uniforms.time.value = elapsedTime;
         waterMaterial.uniforms.cameraQuaternion.value.copy(camera.quaternion)
