@@ -14,12 +14,11 @@ import './style.css';
 // getBubble will be used by Koi instances
 import { animateBubble } from './getBubble';
 import { getLights } from './getLights';
-import { getLoadingManager } from './getLoadingManager';
 import { getEnvMap } from './getEnvMap';
 import { getScene } from './getScene';
 import { Koi } from './Koi';
-import { degreesToRadians } from './degreesToRadians';
-import { convertElapsedToDegrees } from './convertElapsedToDegrees';
+import { SchoolingFish } from './SchoolingFish';
+import { KillerWhale } from './KillerWhale';
 
 console.log('🐠 tjsj-19-aquarium');
 
@@ -34,14 +33,11 @@ renderer.shadowMap.enabled = true
 renderer.shadowMap.type = PCFSoftShadowMap
 const scene = getScene();
 
-// ===== 👨🏻‍💼 LOADING MANAGER =====
-const loadingManager = getLoadingManager();
-
 scene.background = getEnvMap();
 
 // ===== 🎥 CAMERA =====
-const { ambientLight, pointLight, pointLightHelper } = getLights(gui);
-scene.add(ambientLight, pointLight, pointLightHelper);
+// const { ambientLight, directionLight, dirLightHelper } = getLights(gui);
+scene.add(...Object.values(getLights(gui)));
 
 // ===== 🫧 OBJECTS =====
 const revolvingKoi = new Koi();
@@ -49,6 +45,13 @@ revolvingKoi.group.rotateY(0)
 const initCameraYRotation = Math.PI * -0.5;
 revolvingKoi.group.rotation.y = initCameraYRotation;
 scene.add(revolvingKoi.group);
+
+// FIXME whale is massive - won't respond to scaling here; might need Blender to edit
+// const killerWhale = new KillerWhale();
+// scene.add(killerWhale.group);
+
+const school = new SchoolingFish();
+scene.add(school.group);
 
 // ===== 🎥 CAMERA =====
 const camera = new PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000)
@@ -60,7 +63,7 @@ cameraControls.enableDamping = true;
 cameraControls.autoRotate = false;
 cameraControls.enablePan = false;
 cameraControls.enableZoom = false;
-cameraControls.target.set(0, 0, 10);
+cameraControls.target.set(0, 0, 1);
 cameraControls.update();
 
 const mouse = { x: 0, y: 0 };
@@ -125,17 +128,15 @@ const clock = new Clock();
 function animate() {
     requestAnimationFrame(animate);
 
+    const delta = clock.getDelta();
+
     const elapsedTime = clock.getElapsedTime();
-    animateBubble(elapsedTime, camera, clock.getDelta());
+    animateBubble(elapsedTime, camera, delta);
 
-    const speedNumerator = 6.3; // don't change this
-    const rotationDuration = 20; // change this
-    const speed = speedNumerator / rotationDuration; // speed 1 duration 6.3
-    revolvingKoi.animate(clock.getDelta());
-    revolvingKoi.group.position.y = Math.cos(elapsedTime * speed) * 25;
-    revolvingKoi.group.position.z = Math.sin(elapsedTime * speed) * 25;
-    revolvingKoi.group.rotation.x = degreesToRadians(convertElapsedToDegrees(elapsedTime, rotationDuration));
-
+    revolvingKoi.animate(delta, elapsedTime);
+    // killerWhale.animate(delta, elapsedTime);
+    school.animate(delta, elapsedTime);
+    
     stats.begin();
 
     if (resizeRendererToDisplaySize(renderer)) {
