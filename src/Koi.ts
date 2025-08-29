@@ -50,7 +50,6 @@ export class Koi {
         const bubble = getBubble();
         bubble.scale.set(3, 3, 3);
         this.group.add(bubble);
-        console.log(this.group)
     }
 
     animate(delta: number, elapsedTime: number) {

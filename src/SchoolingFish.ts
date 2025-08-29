@@ -50,9 +50,12 @@ export class SchoolingFish {
         this.group.add(bubble);
     }
 
-    animate(delta: number) {
+    animate(delta: number, elapsedTime: number) {
         // I'm not pleased with this animation. It's clearly going backwards at points, or you see the animation loop.
         const safeDelta = Math.min(Math.max(delta, 1/120), 1/24); // between 1/120s and 1/24s
         this.mixer?.update(safeDelta);
+
+        this.group.position.x = Math.sin(elapsedTime * 0.25) * 5;
+        this.group.position.z = Math.cos(elapsedTime * 0.25) * 5;
     }
 }
