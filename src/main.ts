@@ -20,6 +20,8 @@ import { Koi } from './Koi';
 import { SchoolingFish } from './SchoolingFish';
 import { convertElapsedToDegrees } from './convertElapsedToDegrees';
 import { degreesToRadians } from './degreesToRadians';
+import { getLilyPad } from './getLilyPad';
+import { GLTF } from 'three/examples/jsm/Addons.js';
 
 console.log('🐠 tjsj-19-aquarium');
 
@@ -37,30 +39,42 @@ const scene = getScene();
 scene.background = getEnvMap();
 
 // ===== 🎥 CAMERA =====
-// const { ambientLight, directionLight, dirLightHelper } = getLights(gui);
 scene.add(...Object.values(getLights(gui)));
 
 // ===== 🫧 OBJECTS =====
 const revolvingKoi = new Koi();
-revolvingKoi.group.rotateY(0)
 const initCameraYRotation = Math.PI * -0.5;
 revolvingKoi.group.rotation.y = initCameraYRotation;
 scene.add(revolvingKoi.group);
 
-// const roamingKoi = new Koi();
-// roamingKoi.group.position.y = -15;
-// scene.add(roamingKoi.group);
+const roamingKoi = new Koi();
+roamingKoi.group.position.y = -15;
+scene.add(roamingKoi.group);
 
-// FIXME whale is massive - won't respond to scaling here; might need Blender to edit
+// NOTICE whales aren't working
+
+// ! killer whale is too massive and has no animations
 // const killerWhale = new KillerWhale();
 // scene.add(killerWhale.group);
+
+// ! blue whale has bouncing eyes when animated & is also massive 
+// const blueWhale = new BlueWhale();
+// scene.add(blueWhale.group);
 
 const school = new SchoolingFish();
 scene.add(school.group);
 
+// TODO add loading state with overlay for better presentation
+let lilyPad: GLTF;
+getLilyPad().then(gltf => {
+    lilyPad = gltf;
+    scene.add(lilyPad.scene);
+    lilyPad.scene.scale.set(5, 5, 5);
+    lilyPad.scene.position.y = -5;
+});
+
 // ===== 🎥 CAMERA =====
 const camera = new PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000)
-camera.position.set(1, 0, 0);
 
 // ===== 🕹️ CONTROLS =====
 const cameraControls = new OrbitControls(camera, canvas);
@@ -130,8 +144,8 @@ gui.close()
 
 const clock = new Clock();
 
-// let prevRoamingPos = 0;
-// let isRoamingNegative = false;
+let prevRoamingPos = 0;
+let isRoamingNegative = false;
 
 function animate() {
     requestAnimationFrame(animate);
@@ -150,25 +164,17 @@ function animate() {
     revolvingKoi.group.rotation.x = degreesToRadians(convertElapsedToDegrees(elapsedTime, rotationDuration));
     revolvingKoi.group.children[0]?.rotateX(degreesToRadians(Math.sin(elapsedTime) * 10) * 0.25);
 
-    // roamingKoi.animate(delta);
-    // roamingKoi.group.position.x = Math.sin(elapsedTime * 0.1) * 120;
+    roamingKoi.animate(delta);
+    roamingKoi.group.position.x = Math.sin(elapsedTime * 0.1) * 120;
+    isRoamingNegative = prevRoamingPos - roamingKoi.group.position.x < 0;
+    prevRoamingPos = roamingKoi.group.position.x;
+    roamingKoi.group.rotation.y = isRoamingNegative ? 0 : degreesToRadians(180);
 
-    // isRoamingNegative = prevRoamingPos - roamingKoi.group.position.x < 0;
-    // prevRoamingPos = roamingKoi.group.position.x;
-    // if (isRoamingNegative) {
-    //     console.log('flip directions - going negative');
-    //     // isRoamingNegative = true;
-    //     roamingKoi.group.rotateY(degreesToRadians(180));
-    // } else {
-    //     console.log('flip directions - going positive');
-    //     // isRoamingNegative = false;
-    //     roamingKoi.group.rotateY(degreesToRadians(360));
-    // }
-
-    // roamingKoi.group.rotateY(Math.PI * (/* isRoamingNegative ? 2 : */ 1))
-
+    // blueWhale.animate(delta, elapsedTime);
     // killerWhale.animate(delta, elapsedTime);
     school.animate(delta, elapsedTime);
+
+    lilyPad.scene.rotateY(-0.005);
 
     stats.begin();
 
