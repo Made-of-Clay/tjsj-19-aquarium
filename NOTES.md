@@ -8,9 +8,14 @@
   - [x] textures for realism
   - consider more complex example than just a plane (e.g. plane w/ notches cut out, inside of cylinder with parts missing, Blender-modeled fragmented tunnel, etc.)
 - [x] good-enough lighting
-  - [ ] refined lighting
-- [ ] other swimmers
+  - [x] refined lighting
+- [x] other swimmers
   - koi
   - school of fish
   - jelly fish bobbing up/down
-- [ ] aquarium misc. decor
+- [x] aquarium misc. decor
+- [x] add animated bubbles to treasure island chest
+  - I removed the bubbles as I need to figure out the local space translation but its working on global; not enough time
+- [x] add credits panel (links to models)
+- [ ] add loading overlay
+  - probably need event from each thing to notify when model as loaded

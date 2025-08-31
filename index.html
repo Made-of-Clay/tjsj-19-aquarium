@@ -1,12 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Three.js + TypeScript + Vite</title>
-  </head>
-  <body>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="/favicon.svg"
+  />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Three.js + TypeScript + Vite</title>
+  <style>
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    label {
+      --borderRadius: 0.25rem;
+      background-color: rgba(0, 0, 0, 0.25);
+      border: 0 none;
+      border-radius: var(--borderRadius) var(--borderRadius) 0 0;
+      font-weight: bold;
+      color: white;
+      display: inline-block;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+
+      #credits>label {
+        background-color: transparent;
+      }
+    }
+
+    #toggle {
+      display: none;
+    }
+
+    table {
+      text-align: left;
+    }
+
+    th,
+    td {
+      padding: 0.25rem;
+    }
+
+    #creditsWrapper {
+      background: black;
+      bottom: 0;
+      display: flex;
+      left: 0;
+      justify-content: center;
+      position: fixed;
+      transform: translateY(100%);
+      transition: transform 0.3s;
+      width: 100%;
+
+      #toggle:checked+& {
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <footer>
+    <label for="toggle">
+      Credits
+    </label>
+
+    <input
+      id="toggle"
+      type="checkbox"
+    >
+
+    <div id="creditsWrapper">
+      <div id="credits">
+        <label for="toggle">Close &times;</label>
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Author</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a href="https://sketchfab.com/3d-models/stylized-treasure-chest-af528358159a4d7a850b4c8337d6928f">
+                  Treasure Chest
+                </a>
+              </td>
+              <td><a href="https://sketchfab.com/Gintoki1234">Gintoki1234</a></td>
+            </tr>
+            <tr>
+              <td>
+                <a href="https://sketchfab.com/3d-models/the-fish-particle-eb214794846949a5a0b1af75fd649aa2">
+                  Fish School
+                </a>
+              </td>
+              <td><a href="https://sketchfab.com/norgeotloic">Loïc Norgeot</a></td>
+            </tr>
+            <tr>
+              <td>
+                <a href="https://sketchfab.com/3d-models/low-poly-lily-pad-85432122196d41a38f21288fac1f761e">
+                  Lily Pad
+                </a>
+              </td>
+              <td><a href="https://sketchfab.com/Logan_S">Logan S.</a></td>
+            </tr>
+            <tr>
+              <td>
+                <a href="https://sketchfab.com/3d-models/koi-fish-236859b809984f52b70c94fd040b9c59">
+                  Koi
+                </a>
+              </td>
+              <td><a href="https://sketchfab.com/7plus">7PLUS</a></td>
+            </tr>
+            <tr>
+              <td>
+                <a href="https://sketchfab.com/3d-models/floating-island-19cb15f12d7b4ddcbf1ef5034f81dc7e">
+                  Floating Island
+                </a>
+              </td>
+              <td><a href="https://sketchfab.com/wasis007">wasis007</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </footer>
+
+  <script
+    type="module"
+    src="/src/main.ts"
+  ></script>
+</body>
+
 </html>
