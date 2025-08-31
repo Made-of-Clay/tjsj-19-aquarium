@@ -22,6 +22,7 @@ import { convertElapsedToDegrees } from './convertElapsedToDegrees';
 import { degreesToRadians } from './degreesToRadians';
 import { getLilyPad } from './getLilyPad';
 import { GLTF } from 'three/examples/jsm/Addons.js';
+import { TreasureIsland } from './TreasureIsland';
 
 console.log('🐠 tjsj-19-aquarium');
 
@@ -72,6 +73,10 @@ getLilyPad().then(gltf => {
     lilyPad.scene.scale.set(5, 5, 5);
     lilyPad.scene.position.y = -5;
 });
+
+const treasureIsland = new TreasureIsland(gui);
+treasureIsland.group.name = 'Treasure Island';
+scene.add(treasureIsland.group);
 
 // ===== 🎥 CAMERA =====
 const camera = new PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000)
@@ -174,7 +179,9 @@ function animate() {
     // killerWhale.animate(delta, elapsedTime);
     school.animate(delta, elapsedTime);
 
-    lilyPad.scene.rotateY(-0.005);
+    lilyPad?.scene.rotateY(-0.005);
+
+    treasureIsland.animate(delta, elapsedTime);
 
     stats.begin();
 

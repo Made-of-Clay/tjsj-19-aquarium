@@ -1,0 +1,11 @@
+Model Information:
+* title:	Stylized Treasure Chest
+* source:	https://sketchfab.com/3d-models/stylized-treasure-chest-af528358159a4d7a850b4c8337d6928f
+* author:	Gintoki1234 (https://sketchfab.com/Gintoki1234)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Stylized Treasure Chest" (https://sketchfab.com/3d-models/stylized-treasure-chest-af528358159a4d7a850b4c8337d6928f) by Gintoki1234 (https://sketchfab.com/Gintoki1234) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

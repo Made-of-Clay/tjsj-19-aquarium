@@ -7,10 +7,7 @@ export function getLilyPad(): Promise<GLTF> {
     return new Promise<GLTF>((resolve, reject) => {
         loader.load(
             'models/low_poly_lily_pad/scene.gltf',
-            (gltf => {
-                console.log('🌸 lily pad loaded', gltf);
-                resolve(gltf);
-            }),
+            resolve,
             undefined,
             reject,
         );
